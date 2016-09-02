@@ -29,10 +29,23 @@ labels_file = caffe_root + 'data/ilsvrc12/synset_words.txt'
 labels = np.loadtxt(labels_file, str, delimiter='\t')
 
 
+#init logging
+import logging
+logging.basicConfig(filename='/root/caffe.log',
+                            filemode='a',
+                            format='%(message)s',
+                            datefmt='%H:%M:%S',
+                            level=logging.DEBUG)
+
 #predict images
-image = caffe.io.load_image(caffe_root + 'examples/images/cat.jpg')
-transformed_image = transformer.preprocess('data', image)
-net.blobs['data'].data[...] = transformed_image
-output = net.forward()
-output_prob = output['prob'][0]
-print 'output label:', labels[output_prob.argmax()],output_prob[output_prob.argmax()]
+import glob
+img_list = glob.glob('/root/*.jpg')
+for img in img_list:
+	print img
+	image = caffe.io.load_image(img)
+	transformed_image = transformer.preprocess('data', image)
+	net.blobs['data'].data[...] = transformed_image
+	output = net.forward()
+	output_prob = output['prob'][0]
+	print 'output label:', labels[output_prob.argmax()],output_prob[output_prob.argmax()]
+        logging.info(img + '\t'+ labels[output_prob.argmax()] + '\t' + str(round(output_prob[output_prob.argmax()],3)))
