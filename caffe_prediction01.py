@@ -2,7 +2,7 @@ import numpy as np
 import sys
 caffe_root = '/opt/caffe/'
 import caffe
-image_path = '/opt/'
+image_path = '/opt/cat/*'
 caffe.set_mode_cpu()
 print 'caffe load.. ',caffe
 #model def
