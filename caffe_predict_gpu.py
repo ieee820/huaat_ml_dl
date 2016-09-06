@@ -4,6 +4,8 @@ caffe_root = '/opt/caffe/'
 import caffe
 image_path = '/opt/cat/*'
 #caffe.set_mode_cpu()
+caffe.set_device(0)  # if we have multiple GPUs, pick the first one
+caffe.set_mode_gpu()
 print 'caffe load.. ',caffe
 #model def
 model_def = caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt'
