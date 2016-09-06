@@ -2,7 +2,7 @@ import numpy as np
 import sys
 caffe_root = '/opt/caffe/'
 import caffe
-image_path = '/root/'
+image_path = '/opt/'
 caffe.set_mode_cpu()
 print 'caffe load.. ',caffe
 #model def
@@ -31,7 +31,7 @@ labels = np.loadtxt(labels_file, str, delimiter='\t')
 
 #init logging
 import logging
-logging.basicConfig(filename='/root/caffe.log',
+logging.basicConfig(filename='/opt/caffe.log',
                             filemode='a',
                             format='%(message)s',
                             datefmt='%H:%M:%S',
@@ -39,7 +39,7 @@ logging.basicConfig(filename='/root/caffe.log',
 
 #predict images
 import glob
-img_list = glob.glob('/root/*.jpg')
+img_list = glob.glob(image_path)
 for img in img_list:
 	print img
 	image = caffe.io.load_image(img)
