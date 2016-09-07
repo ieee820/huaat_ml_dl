@@ -73,9 +73,10 @@ def main(argv):
 		net.blobs['data'].data[...] = transformed_image
 		output = net.forward()
 		output_prob = output['prob'][0]
+		top_inds = output_prob.argsort()[::-1][:2]
 		#pdb.set_trace()
-		print 'output label:', labels[output_prob.argmax()],output_prob[output_prob.argmax()]
-	    logging.info(img + '\t'+ labels[output_prob.argmax()] + '\t' + str(round(output_prob[output_prob.argmax()],3)))
+		print 'output label:', labels[top_inds[0]],output_prob[top_inds[0]],labels[top_inds[1]],output_prob[top_inds[1]]
+	    logging.info(img + '\t'+ labels[top_inds[0]] + '\t' + str(round(output_prob[top_inds[0]],3)) + '\t'+ labels[top_inds[1]] + '\t' + str(round(output_prob[top_inds[1]],3)))
 	#end
 	logging.info(time.asctime(time.localtime(time.time())))
 
