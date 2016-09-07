@@ -13,20 +13,20 @@ def main(argv):
 	#image_path = '/opt/cat/*'
 	#log_path = '/opt/out.log'
 	parser = argparse.ArgumentParser()
-    # Required arguments: input and output files.
-    parser.add_argument(
+        # Required arguments: input and output files.
+        parser.add_argument(
         "image_path",
         help="Input image, directory, or npy."
-    )
-    parser.add_argument(
+        )
+        parser.add_argument(
         "log_path",
         help="Output npy filename."
-    )
-    args = parser.parse_args()
-    #set vars from argvs
-    image_path = args.image_path
-    log_path = args.log_path
-    #program begin...
+        )
+    	args = parser.parse_args()
+    	#set vars from argvs
+    	image_path = args.image_path
+    	log_path = args.log_path
+    	#program begin...
 	caffe.set_mode_cpu()
 	print 'caffe load.. ',caffe
 	#model def
@@ -63,8 +63,8 @@ def main(argv):
 	#begin
 	logging.info(time.asctime(time.localtime(time.time())))
 	#predict images
-
-	img_list = glob.glob(image_path)
+	print 'img_path: '+ args.image_path
+	img_list = glob.glob(args.image_path+'/*')
 	for img in img_list:
 		print img
 		image = caffe.io.load_image(img)
@@ -73,7 +73,7 @@ def main(argv):
 		output = net.forward()
 		output_prob = output['prob'][0]
 		print 'output label:', labels[output_prob.argmax()],output_prob[output_prob.argmax()]
-	    logging.info(img + '\t'+ labels[output_prob.argmax()] + '\t' + str(round(output_prob[output_prob.argmax()],3)))
+	    	logging.info(img + '\t'+ labels[output_prob.argmax()] + '\t' + str(round(output_prob[output_prob.argmax()],3)))
 	#end
 	logging.info(time.asctime(time.localtime(time.time())))
 
