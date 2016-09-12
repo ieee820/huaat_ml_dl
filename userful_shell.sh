@@ -427,7 +427,7 @@ ls ../img_0910/9/ | wc -l
 ls ../img_0910/10/ | wc -l
 ls ../img_0910/11/ | wc -l
 
-#图片类别分布情况：
+#图片类别分布情况（2016.9.12 21:54）：6502 - 2168 - 8670
 root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/0/ | wc -l
 13556
 root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/0/ | wc -l
@@ -454,3 +454,11 @@ root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/10/
 9297
 root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/11/ | wc -l
 8676
+
+#图片名称乱码处理：
+ - ╕▒▒╛
+ 
+ 
+#检查
+cat train_v1.txt | grep '\/9\/' | wc -l
+ 
