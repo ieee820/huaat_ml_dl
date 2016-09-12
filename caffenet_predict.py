@@ -72,7 +72,7 @@ def main(argv):
         output_prob = output['prob'][0]
         top_inds = output_prob.argsort()[::-1][:2]
         #pdb.set_trace()
-        print img+'\t'+labels[top_inds[0]]+'\t'+str(round(output_prob[top_inds[0]],6))+'\t'+labels[top_inds[1]]+'\t'+str(round(output_prob[top_inds[1]],6))
+        print img+'\t'+labels[top_inds[0]]+'\t'+str(round(output_prob[top_inds[0]],4))+'\t'+labels[top_inds[1]]+'\t'+str(round(output_prob[top_inds[1]],4))
         #logging.info(img + '\t'+ labels[top_inds[0]] + '\t' + str(round(output_prob[top_inds[0]],3)) + '\t'+ labels[top_inds[1]] + '\t' + str(round(output_prob[top_inds[1]],3)))
     #end
     print time.asctime(time.localtime(time.time()))

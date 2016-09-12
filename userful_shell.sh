@@ -205,7 +205,7 @@ mv 8/*.gif 8_gif/
 mv 9/*.gif 9_gif/
 mv 10/*.gif 10_gif/
 mv 11/*.gif 11_gif/
-
+mv testset2/*.gif ./testset2_gif/
 
 rm -r 0_gif/*.gif
 rm -r 1_gif/*.gif
@@ -381,3 +381,76 @@ cat testset2_0911_01.txt | sort -k2 -n | wc -l
 layer:fc8-0910
 /usr/bin/python convert_mean_to_npy.py ./lmdb_0910/mean_0910.binaryproto ./model_0910/pretrain_model/mean.npy
 /usr/bin/python caffe_predict.py ./custom_test_imgs
+
+#make 0911 testset
+$caffe_root/build/tools/convert_imageset -shuffle -resize_height=256 -resize_width=256 ./testset1_nogif/ test_datasets_labels/testset_t1_0911.txt  ./test_lmdb
+
+#train data 0911 , testset = bot test1 sets
+/data/bot_img/lmdb_0911/mean_lmdb_0911.binaryproto
+/data/bot_img/model_0911
+cd /data/bot_img/model_0911
+$caffe_root/build/tools/caffe train -solver ./solver_model_0911.prototxt -weights ./snapshot_iter_300000.caffemodel -gpu 0
+cat nohup.out | grep 'Test\snet\soutput'
+
+snapshot_iter_50000.0911_1838.caffemodel
+#0216.09.12
+/cygdrive/c/Python27/python.exe 
+$caffe_root/build/tools/convert_imageset -shuffle true -resize_height=256 -resize_width=256 /data/bot_img/img_0910 ./test_datasets_labels/sorted_t2_and_base_r1500_lmdb_labels.txt ./lmdb_0912/test_lmdb
+snapshot_iter_50000.0911_1838.caffemodel
+nohup $caffe_root/build/tools/caffe train -solver ./solver_model_0912.prototxt -weights ./snapshot_iter_50000.0911_1838.caffemodel  -gpu 0 &
+
+#2016.09.12 21:03
+root@sjkxb-Default-string:/data/bot_img# find ./img_0910/ -iname "*.jpg" | wc -l
+149382
+root@sjkxb-Default-string:/data/bot_img# find ./img_0910/ -iname "*.jpeg" | wc -l
+1701
+root@sjkxb-Default-string:/data/bot_img# find ./img_0910/ -iname "*.png" | wc -l
+4991
+root@sjkxb-Default-string:/data/bot_img# find ./img_0910/ -iname "*.gif" | wc -l
+0
+root@sjkxb-Default-string:/data/bot_img# date
+2016年 09月 12日 星期一 20:59:27 CST
+root@sjkxb-Default-string:/data/bot_img# 
+
+
+#
+ls ../img_0910/0/ | wc -l
+ls ../img_0910/1/ | wc -l
+ls ../img_0910/2/ | wc -l
+ls ../img_0910/3/ | wc -l
+ls ../img_0910/4/ | wc -l
+ls ../img_0910/5/ | wc -l
+ls ../img_0910/6/ | wc -l
+ls ../img_0910/7/ | wc -l
+ls ../img_0910/8/ | wc -l
+ls ../img_0910/9/ | wc -l
+ls ../img_0910/10/ | wc -l
+ls ../img_0910/11/ | wc -l
+
+#图片类别分布情况：
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/0/ | wc -l
+13556
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/0/ | wc -l
+13556
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/1/ | wc -l
+11537
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/2/ | wc -l
+9725
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/3/ | wc -l
+11781
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/4/ | wc -l
+14348
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/5/ | wc -l
+12550
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/6/ | wc -l
+14021
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/7/ | wc -l
+11085
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/8/ | wc -l
+11871
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/9/ | wc -l
+9035
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/10/ | wc -l
+9297
+root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/11/ | wc -l
+8676

@@ -9,9 +9,9 @@ import numpy as np
 #answer_file = 'E:/caffe/0912/t2_real_labels.csv'
 #dir = "E:/train/testset2_nogif"
 #train_img_path = 'E:/train/'
-answer_file = '/data/bot_img/test_datasets_labels/t2_real_labels.csv'
-dir = "/data/bot_img/img_0910/testset2_nogif"
-train_img_path = '/data/bot_img/img_0910/'
+answer_file = '/data/bot_img/t2_real_labels.csv'
+dir = "/data/bot_img/train/testset2_nogif/"
+train_img_path = '/data/bot_img/train/'
 
 f = open(answer_file)
 answer_dict = {}
