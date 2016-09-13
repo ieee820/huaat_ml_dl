@@ -1,4 +1,4 @@
- find ./cat/ -iname "*.jpg" | sed -n '1,100p' | xargs cp -t ../temp/
+find ./cat/ -iname "*.jpg" | sed -n '1,100p' | xargs cp -t ../temp/
 
 
  794624 Aug 31 16:32 cat/
@@ -301,9 +301,9 @@ mv 11 0910_img/
 #create lmdb
 export caffe_root='/home/sjkxb/Downloads/tools/caffe-master/'
 $caffe_root/build/tools/convert_imageset -shuffle -resize_height=256 -resize_width=256 \
- ./0910_img/ ./lmdb_0910/train.txt ./lmdb_0910/train_lmdb
+ ./img_0910/ ./lmdb_0910/train.txt ./lmdb_0910/train_lmdb
 $caffe_root/build/tools/convert_imageset -shuffle -resize_height=256 -resize_width=256 \
- ./0910_img/ ./lmdb_0910/test.txt ./lmdb_0910/test_lmdb
+ ./img_0910/ ./lmdb_0910/test.txt ./lmdb_0910/test_lmdb
 $caffe_root/build/tools/compute_image_mean ./lmdb_0910/train_lmdb/ ./lmdb_0910/mean.binaryproto
 
 #train 2016-09-10
@@ -458,7 +458,73 @@ root@sjkxb-Default-string:/data/bot_img/test_datasets_labels# ls ../img_0910/11/
 #图片名称乱码处理：
  - ╕▒▒╛
  
+#模型运算：
+nohup $caffe_root/build/tools/caffe train -solver ./solver_model_0913.prototxt -weights ./snapshot_iter_20000.caffemodel -gpu 0 &
  
 #检查
 cat train_v1.txt | grep '\/9\/' | wc -l
- 
+
+#将base图片+test1图片+test2图片全部移动到统一的路径all_0913
+cp -r ./0/ ./all_0913/
+cp -r ./1/ ./all_0913/
+cp -r ./2/ ./all_0913/
+cp -r ./3/ ./all_0913/
+cp -r ./4/ ./all_0913/
+cp -r ./5/ ./all_0913/
+cp -r ./6/ ./all_0913/
+cp -r ./7/ ./all_0913/
+cp -r ./8/ ./all_0913/
+cp -r ./9/ ./all_0913/
+cp -r ./10/ ./all_0913/
+cp -r ./11/ ./all_0913/
+
+root@sjkxb-Default-string:/data/bot_img/img_0910# find ./all -iname "*.jpg" | wc -l
+131905
+root@sjkxb-Default-string:/data/bot_img/img_0910# find ./all -iname "*.png" | wc -l
+3909
+root@sjkxb-Default-string:/data/bot_img/img_0910# find ./all -iname "*.jpeg" | wc -l
+1500
+
+
+ls 0/ | wc -l
+ls 1/ | wc -l
+ls 2/ | wc -l
+ls 3/ | wc -l
+ls 4/ | wc -l
+ls 5/ | wc -l
+ls 6/ | wc -l
+ls 7/ | wc -l
+ls 8/ | wc -l
+ls 9/ | wc -l
+ls 10/ | wc -l
+ls 11/ | wc -l
+
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 0/ | wc -l
+13556
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 11/ | wc -l
+8675
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 0/ | wc -l
+13556
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 1/ | wc -l
+11537
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 2/ | wc -l
+9725
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 3/ | wc -l
+11781
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 4/ | wc -l
+14348
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 5/ | wc -l
+12550
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 6/ | wc -l
+14021
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 7/ | wc -l
+11084
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 8/ | wc -l
+11850
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 9/ | wc -l
+9035
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 10/ | wc -l
+9297
+root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 11/ | wc -l
+8675
+sum()=132683

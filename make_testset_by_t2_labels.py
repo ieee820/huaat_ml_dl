@@ -6,10 +6,15 @@ import os.path
 
 
 #path config
-answer_file = 'E:/caffe/0912/t2_real_labels.csv'
-dir =  "E:/train/testset2_nogif/"
+#answer_file = 'E:/caffe/0912/t2_real_labels.csv'
+#dir =  "E:/train/testset2_nogif/"
+#root_dir = '/testset2_nogif/'
+
+answer_file = '/data/bot_img/labels/t1_errors.txt'
+dir =  "/data/bot_img/img_0910/testset1_nogif/"
+root_dir = '/testset1_nogif/'
+
 simbol = ' '
-root_dir = '/testset2_nogif/'
 
 f = open(answer_file)
 answer_dict = {}
