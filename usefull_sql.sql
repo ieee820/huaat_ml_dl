@@ -159,4 +159,18 @@ select * from (
 select t1.img_id,t1.type, t2.type_1 as type_score from bot_img_answer_01_and_02  t1 LEFT JOIN bot_img_test_01_and_t2 t2 on t1.img_id = t2.img_id 
 and t1.type = t2.type_1 ) t3 where t3.type_score is null
 
+#
+select t1.img_id,
+case when t1.score_1 > t2.score_1 then
+t1.type_1 
+else
+t2.type_1
+end type1,
+t1.type_1,
+t1.score_1,
+t2.type_1,
+t2.score_1
+from bot_img_test_03_caffemodel t1 inner join bot_img_test_03_p1 t2 on  t1.img_id = t2.img_id  
+
+#
 

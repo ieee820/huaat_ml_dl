@@ -528,3 +528,34 @@ root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 10/ | wc -l
 root@sjkxb-Default-string:/data/bot_img/img_0910/all_0913# ls 11/ | wc -l
 8675
 sum()=132683
+
+
+ls ./0/* | sed 's/$/ 0/ ' >> all_img_until_t2.txt
+ls ./1/* | sed 's/$/ 1/ ' >> all_img_until_t2.txt
+ls ./2/* | sed 's/$/ 2/ ' >> all_img_until_t2.txt
+ls ./3/* | sed 's/$/ 3/ ' >> all_img_until_t2.txt
+ls ./4/* | sed 's/$/ 4/ ' >> all_img_until_t2.txt
+ls ./5/* | sed 's/$/ 5/ ' >> all_img_until_t2.txt
+ls ./6/* | sed 's/$/ 6/ ' >> all_img_until_t2.txt
+ls ./7/* | sed 's/$/ 7/ ' >> all_img_until_t2.txt
+ls ./8/* | sed 's/$/ 8/ ' >> all_img_until_t2.txt
+ls ./9/* | sed 's/$/ 9/ ' >> all_img_until_t2.txt
+ls ./10/* | sed 's/$/ 10/ ' >> all_img_until_t2.txt
+ls ./11/* | sed 's/$/ 11/ ' >> all_img_until_t2.txt
+
+#09.13 测试情况：
+root@sjkxb-Default-string:/data/bot_img# cat predict_class1_0913.txt | awk -F"\t" '$2==1{print}' | wc -l
+11278
+root@sjkxb-Default-string:/data/bot_img# cat predict_class1_0913.txt | wc -l
+11542
+root@sjkxb-Default-string:/data/bot_img# cat predict_class10_0913.txt | awk -F"\t" '$2==10{print}' | wc -l
+9203
+root@sjkxb-Default-string:/data/bot_img# cat predict_class10_0913.txt  | wc -l
+9302
+root@sjkxb-Default-string:/data/bot_img# cat predict_class7_0913.txt | awk -F"\t" '$2==7{print}' | wc -l
+10885
+root@sjkxb-Default-string:/data/bot_img# cat predict_class7_0913.txt | wc -l
+11089
+
+
+
