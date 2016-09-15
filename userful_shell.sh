@@ -557,5 +557,90 @@ root@sjkxb-Default-string:/data/bot_img# cat predict_class7_0913.txt | awk -F"\t
 root@sjkxb-Default-string:/data/bot_img# cat predict_class7_0913.txt | wc -l
 11089
 
+#2016.09.15
+"C:\Program Files\Amazon\AWSCLI\aws.exe" s3 cp ./testset3_nogif.zip s3://yangjj-share01/
+"C:\Program Files\Amazon\AWSCLI\aws.exe" s3 ls s3://yangjj-share01/
+
+#09.15 ec2
+aws s3 ls s3://yangjj-share01/ | sort
+aws s3 cp s3://yangjj-share01/testset3_nogif.zip ./ 
+aws s3 cp s3://yangjj-share01/googlenet_mean.npy ./
+aws s3 cp s3://yangjj-share01/bot_predict.py ./
+aws s3 cp s3://yangjj-share01/googlenetdeploy.prototxt ./
+aws s3 cp s3://yangjj-share01/googlenet0913_iter_100000.caffemodel ./
+
+ls -tlh ./ 
+
+ls ./all_gif/*.gif | wc -l
+ls ./all_gif/*.png | wc -l
+mv 0/*.gif ./all_gif/
+mv 1/*.gif ./all_gif/
+mv 2/*.gif ./all_gif/
+mv 3/*.gif ./all_gif/
+mv 4/*.gif ./all_gif/
+mv 5/*.gif ./all_gif/
+mv 6/*.gif ./all_gif/
+mv 7/*.gif ./all_gif/
+mv 8/*.gif ./all_gif/
+mv 9/*.gif ./all_gif/
+mv 10/*.gif ./all_gif/
+mv 11/*.gif ./all_gif/
+rm -rf ./all_gif/*.gif 
+
+python conver_gif_to_png.py
+mkdir t1_gif
+mkdir t2_gif
+mv ./testset1/*.gif t1_gif/
+mv ./testset2/*.gif t2_gif/
+ls ./t1_gif/*.gif | wc -l
+ls ./t1_gif/*.png | wc -l
+ls ./t2_gif/*.gif | wc -l
+ls ./t2_gif/*.png | wc -l
+sed  -i 's/all_gif/t1_gif/g' conver_gif_to_png.py
+rm -rf ./t1_gif/*.gif 
+rm -rf ./t2_gif/*.gif
+sed  -i 's/t1_gif/t2_gif/g' conver_gif_to_png.py 
+cat conver_gif_to_png.py | grep t2_gif
+ls ./testset1/*.gif | wc -l
+ls ./testset2/*.gif | wc -l
+mv  t1_gif/*.png ./testset1/
+mv  t2_gif/*.png ./testset2/
+ls ./testset1/* | wc -l
+ls ./testset2/* | wc -l
+
+mv 0/* ./all_img/
+ls ./all_img/* | wc -l
+mv 1/* ./all_img/
+mv 2/* ./all_img/
+mv 3/* ./all_img/
+mv 4/* ./all_img/
+mv 5/* ./all_img/
+mv 6/* ./all_img/
+mv 7/* ./all_img/
+mv 8/* ./all_img/
+mv 9/* ./all_img/
+mv 10/* ./all_img/
+mv 11/* ./all_img/
+find ./all_img/ -iname "*" | wc -l
+mv testset1 testset1_nogif
+mv testset2 testset2_nogif
+cp -r 
+ls ./[0-9]* | args rm -r
+rm -r 0/
+rm -r 1/
+rm -r 2/
+rm -r 3/
+rm -r 4/
+rm -r 5/
+rm -r 6/
+rm -r 7/
+rm -r 8/
+rm -r 9/
+rm -r 10/
+rm -r 11/
+mv all_gif/*.png all_img/
 
 
+docker start 056e
+docker exec -it 056e bash
+nvidia-smi

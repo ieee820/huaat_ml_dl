@@ -5,7 +5,7 @@ gif图片转换为 jpg
 from PIL import Image
 import os
 import os.path
-dir = "E:\\testset2_gif"
+dir = "/home/ubuntu/all_gif/"
 for root, dirs, files in os.walk(dir):
     for name in files:
         tmpFile = root+"/"+name
