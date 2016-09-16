@@ -682,3 +682,7 @@ aws s3 cp s3://yangjj-share01/resnet_50_iter_10000.caffemodel ./
 
 nohup $caffe_root/build/tools/caffe train -solver ./resnet_50_solver.prototxt -weights ./bak/resnet_50_iter_10000.caffemodel -gpu 0 &
 nohup $caffe_root/build/tools/caffe train -solver ./solver.prototxt -weights ./googlenet0913_iter_100000.caffemodel -gpu 0 &
+
+
+
+cat nohup.out | grep 'Test ' | grep 'loss3/loss3'
