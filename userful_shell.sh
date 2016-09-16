@@ -644,3 +644,41 @@ mv all_gif/*.png all_img/
 docker start 056e
 docker exec -it 056e bash
 nvidia-smi
+
+export caffe_root='/root/caffe/'
+$caffe_root/build/tools/convert_imageset -shuffle -resize_height=256 -resize_width=256 \
+../all_img/ ./sort_train_0915.txt ./train_lmdb
+$caffe_root/build/tools/compute_image_mean ./train_lmdb/mean.0915.16069.binaryproto
+
+
+
+cp -r testset1_nogif/* all_img/
+cp -r testset2_nogif/* all_img/
+
+/home/ubuntu
+/home/ubuntu/resnet0915
+
+/root/caffe/build/tools/caffe train -solver ./resnet_50_solver.prototxt -weights ./ResNet-50-model.caffemodel -gpu 0
+nohup /root/caffe/build/tools/caffe train -solver ./resnet_50_solver.prototxt -weights ./ResNet-50-model.caffemodel -gpu 0 &
+rm deploy.prototxt
+rm resnet_50.prototxt
+rm resnet_50_solver.prototxt
+mv nohup.out nohup.0916.11.13
+mkdir pretrain
+
+aws s3 cp ./resnet_50_iter_10000.caffemodel s3://yangjj-share01/
+
+aws s3 cp deploy.prototxt s3://yangjj-share01/
+aws s3 cp resnet_50.prototxt s3://yangjj-share01/
+aws s3 cp resnet_50_solver.prototxt s3://yangjj-share01/
+aws s3 cp mean.0915.npy s3://yangjj-share01/
+aws s3 cp  ../lmdb_0915/mean.0915.16069.binaryproto s3://yangjj-share01/
+aws s3 ls s3://yangjj-share01/ | sort
+aws s3 cp s3://yangjj-share01/resnet_50_iter_10000.caffemodel ./
+aws s3 cp s3://yangjj-share01/deploy.prototxt ./
+aws s3 cp s3://yangjj-share01/resnet_50_iter_10000.caffemodel ./
+aws s3 cp s3://yangjj-share01/resnet_50_iter_10000.caffemodel ./
+aws s3 cp s3://yangjj-share01/resnet_50_iter_10000.caffemodel ./
+
+nohup $caffe_root/build/tools/caffe train -solver ./resnet_50_solver.prototxt -weights ./bak/resnet_50_iter_10000.caffemodel -gpu 0 &
+nohup $caffe_root/build/tools/caffe train -solver ./solver.prototxt -weights ./googlenet0913_iter_100000.caffemodel -gpu 0 &
