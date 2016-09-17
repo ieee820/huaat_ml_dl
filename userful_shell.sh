@@ -686,3 +686,6 @@ nohup $caffe_root/build/tools/caffe train -solver ./solver.prototxt -weights ./g
 
 
 cat nohup.out | grep 'Test ' | grep 'loss3/loss3'
+cat | awk -F"\t" '$3 < 0.9{print}' | wc -l
+model_t4
+128(300) , 32 (50)
