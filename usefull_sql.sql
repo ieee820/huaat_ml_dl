@@ -309,53 +309,53 @@ select count(1) from bot_img_label_r1000 --12000
 SELECT * from bot_img_label_until_t2 t where t.type = 0
 
 
+#t3 errors
+select count(1) from (
+select t1.img_id,t2.type_1 as type_score from bot_img_answer_03  t1 LEFT JOIN bot_img_test_03_p1 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_1 ) t3 where t3.type_score is null --1791
+
+select * from (
+select t1.img_id,t1.type as type,t2.type_1 as type_score from bot_img_answer_03  t1 LEFT JOIN bot_img_test_03_p1 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_1 ) t3 where t3.type_score is null
+
+create table t3_erros as 
+select * from t2_erros where 1=2 
 
 
+select * from t3_erros 
 
 
+create table bot_img_label_until_t3 as 
+select * from bot_img_label_until_t2
 
 
+select t.type,COUNT(t.type) from bot_img_label_until_t3 t GROUP BY t.type 
+
+create table bot_img_test_03_p2 as 
+select * from bot_img_test_03_p1 where 1=2
+
+select count(1) from (
+select t1.img_id,t2.type_1 as type_score from bot_img_answer_03  t1 LEFT JOIN bot_img_test_03_p2 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_1 ) t3 where t3.type_score is not null --9343
+
+create table bot_img_test_04_p1 as 
+select * from bot_img_test_03_p2 where 1=2
+
+create table bot_img_test_04_p2 as 
+select * from bot_img_test_04_p1 where 1=2
 
 
+#select t1.img_id from bot_img_test_04_p1 t1 join bot_img_test_04_p2 t2 on t1.img_id != t2.img_id
+
+create table bot_img_test_04_p3 as 
+select * from bot_img_test_04_p1
+
+select count(1) from bot_img_test_04_p3 --10475 -271 = 
+select count(1) from bot_img_test_04_p1 --10204
+delete from bot_img_test_04_p1 where img_id in (select img_id from bot_img_test_04_p2)
 
 
+create table bot_img_test_04_p4 as 
+select * from bot_img_test_04_p1 where 1=2 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+select count(1) from bot_img_test_04_p4 t where t.score_1 < 0.9; --1362
