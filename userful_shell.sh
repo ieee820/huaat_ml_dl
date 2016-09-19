@@ -696,4 +696,7 @@ model_t4
 /data/bot_img/scripts$ /usr/bin/python 0919_make_labels.py ../labels/bot_img_answer_03.txt ../testset3_nogif | wc -l
 #检查图片是否存在与某目录
 find /data/bot_img/ -iname "10e085ac479340ca9a72a42434024bfc.jpg"
+$caffe_root/build/tools/convert_imageset -shuffle -resize_height=256 -resize_width=256 \
+../all_img/ ./sort_train_0915.txt ./train_lmdb
+$caffe_root/build/tools/compute_image_mean ./train_lmdb/mean.0915.16069.binaryproto
 
