@@ -699,4 +699,5 @@ find /data/bot_img/ -iname "10e085ac479340ca9a72a42434024bfc.jpg"
 $caffe_root/build/tools/convert_imageset -shuffle -resize_height=256 -resize_width=256 \
 ../all_img/ ./sort_train_0915.txt ./train_lmdb
 $caffe_root/build/tools/compute_image_mean ./train_lmdb/mean.0915.16069.binaryproto
+nohup $caffe_root/build/tools/caffe train -solver ./solver.prototxt -weights ./googlenet0913_iter_100000.caffemodel -gpu 0 &
 
