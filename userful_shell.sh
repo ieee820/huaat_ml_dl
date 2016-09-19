@@ -689,3 +689,11 @@ cat nohup.out | grep 'Test ' | grep 'loss3/loss3'
 cat | awk -F"\t" '$3 < 0.9{print}' | wc -l
 model_t4
 128(300) , 32 (50)
+
+
+#0919
+#根据答案生成lmdb格式的输入标签（带图片后缀）
+/data/bot_img/scripts$ /usr/bin/python 0919_make_labels.py ../labels/bot_img_answer_03.txt ../testset3_nogif | wc -l
+#检查图片是否存在与某目录
+find /data/bot_img/ -iname "10e085ac479340ca9a72a42434024bfc.jpg"
+
