@@ -74,7 +74,7 @@ def main(argv):
         #pdb.set_trace()
         #print img+'\t'+labels[top_inds[0]]+'\t'+str(round(output_prob[top_inds[0]],4))+'\t'+labels[top_inds[1]]+'\t'+str(round(output_prob[top_inds[1]],4))
         label01 = labels[top_inds[0]]
-	label02 = labels[top_inds[1]]
+	    label02 = labels[top_inds[1]]
         score1 = output_prob[top_inds[0]]
         score2 = output_prob[top_inds[1]]
         print "%s\t%s\t%.6f\t%s\t%.6f" % (img,label01,score1,label02,score2)

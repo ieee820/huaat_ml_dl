@@ -701,3 +701,8 @@ $caffe_root/build/tools/convert_imageset -shuffle -resize_height=256 -resize_wid
 $caffe_root/build/tools/compute_image_mean ./train_lmdb/mean.0915.16069.binaryproto
 nohup $caffe_root/build/tools/caffe train -solver ./solver.prototxt -weights ./googlenet0913_iter_100000.caffemodel -gpu 0 &
 
+xiatao@sjkxb-Default-string:/data/bot_img/lmdb_0919$ sudo /root/anaconda2/bin/aws s3 cp ./mean.0919.binaryproto s3://yangjj-share01/
+
+cat t5_error_files.txt | sed 's/^/\/data\/bot_img\/TestSet5NoGif\//g' | xargs cp -t ./img_t5/
+
+
