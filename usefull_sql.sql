@@ -424,11 +424,11 @@ select * from bot_img_answer_04 WHERE 1=2
 
 select count(1) from (
 select t1.img_id,t2.type_1 as type_score from bot_img_answer_05  t1 LEFT JOIN bot_img_test_05_p1 t2 on t1.img_id = t2.img_id 
-and t1.type = t2.type_1 ) t3 where t3.type_score is not null --8616 top1 
+and t1.type = t2.type_1 ) t3 where t3.type_score is not null --8616 top1  --8980
 
 select count(1) from (
 select t1.img_id,t2.type_2 as type_score from bot_img_answer_05  t1 LEFT JOIN bot_img_test_05_p1 t2 on t1.img_id = t2.img_id 
-and t1.type = t2.type_2 ) t3 where t3.type_score is not null  --491*0.4 = 196.4 + 8616 = 8812.4
+and t1.type = t2.type_2 ) t3 where t3.type_score is not null  --491*0.4 = 196.4 + 8616 = 8812.4 (394*0.4= 157.6)
 
 
 select count(1) from bot_img_answer_05 --9835
@@ -450,10 +450,17 @@ select DISTINCT type,img_id from bot_img_0923_valset ORDER BY RAND();
 
 
 --print line number
-SELECT @rn:=@rn+1 AS rank, type, img_id
+SELECT @rn:=@rn+1 AS row_num, type, img_id
 FROM (
   SELECT DISTINCT type,img_id 
   FROM bot_img_0923_valset
+  ORDER BY RAND()
+) t1, (SELECT @rn:=0) t2;
+
+SELECT @rn:=@rn+1 AS row_num, type, img_id
+FROM (
+  SELECT DISTINCT type,img_id 
+  FROM bot_img_0923_trainset
   ORDER BY RAND()
 ) t1, (SELECT @rn:=0) t2;
 
@@ -461,4 +468,4 @@ FROM (
 create table bot_img_mxnet_0923_train as select * from bot_img_0923_trainset where 1=2
 SELECT COUNT(DISTINCT img_id) from bot_img_0923_valset --7199
 
-
+select count(1) from bot_img_test_05_p1 t where t.score_1 < 0.8 --1819(<0.9) --1334

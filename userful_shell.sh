@@ -716,3 +716,21 @@ nohup /usr/bin/python ~/mxnet/example/image-classification/fine_tune_0923.py --d
 cat -n testset.txt > out.txt
 cat out.txt | awk -F" " '{print $1"\t" $2"\t" $3}'
 >>>>>>> origin/master
+cd /data/bot_img/mxmodel_0923
+time python ~/mxnet/example/image-classification/0923_predict.py --prefix ./save/save --epoch 5 --path ../TestSet5NoGif > 0923.predict.txt
+sudo /root/anaconda2/bin/aws s3 cp ./save/save-symbol.json s3://yangjj-share01/
+-v /mysql5.6_data/:/var/lib/mysql
+nvidia-docker run -v /home/ubuntu:/opt/  -it kaixhin/cuda-mxnet bash
+aws s3 cp s3://yangjj-share01/mean.bin ./
+aws s3 cp s3://yangjj-share01/0923_predict.py ./
+aws s3 cp s3://yangjj-share01/save-0005.params ./
+aws s3 cp s3://yangjj-share01/save-symbol.json ./
+#aws run mxnet predict
+time python 0923_predict.py --prefix ./save --epoch 5 --path ../testset3_nogif
+apt-get install -upgrade cython
+
+#error
+Traceback (most recent call last):
+  File "/home/xiatao/mxnet/example/image-classification/0923_predict.py", line 44, in <module>
+    normed_img = sample - mean_img
+ValueError: operands could not be broadcast together with shapes (4,299,299) (3,299,299) 
