@@ -705,7 +705,14 @@ xiatao@sjkxb-Default-string:/data/bot_img/lmdb_0919$ sudo /root/anaconda2/bin/aw
 
 cat t5_error_files.txt | sed 's/^/\/data\/bot_img\/TestSet5NoGif\//g' | xargs cp -t ./img_t5/
 
+<<<<<<< HEAD
 cat nohup.out | grep 'loss =' | awk '$9 < 0.021{print}'
 
 nohup /usr/bin/python ~/mxnet/example/image-classification/fine_tune_0923.py --data-dir ./ --model-prefix ./model/Inception-7 --save-model-prefix ./save/ --num-epochs 50 --load-epoch 1 --gpus 0 --train-dataset train_0923.rec --val-dataset val_0923.rec &
 
+=======
+#0922 for mxnet data input
+打印行号
+cat -n testset.txt > out.txt
+cat out.txt | awk -F" " '{print $1"\t" $2"\t" $3}'
+>>>>>>> origin/master
