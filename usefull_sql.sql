@@ -359,3 +359,106 @@ create table bot_img_test_04_p4 as
 select * from bot_img_test_04_p1 where 1=2 
 
 select count(1) from bot_img_test_04_p4 t where t.score_1 < 0.9; --1362
+
+SELECT * from bot_img_test_04_p1 t where t.img_id = 'b58f71cfce0444599fcd19fc94078f4d'
+#
+create table bot_img_answer_04 as
+select * from bot_img_answer_03 where 1=2
+
+#0920 validation for googlenet0913 model
+--mean.0916
+select count(1) from (
+select t1.img_id,t2.type_1 as type_score from bot_img_answer_04  t1 LEFT JOIN bot_img_test_04_p1 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_1 ) t3 where t3.type_score is not null --1659(errors) --8816(hit)
+
+select count(1) from (
+select t1.img_id,t2.type_2 as type_score from bot_img_answer_04  t1 LEFT JOIN bot_img_test_04_p1 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_2 ) t3 where t3.type_score is not null --896(hit) 896*0.4 + 8816 = 9174.4 / 10475 = 0.875
+--mean.0919
+select count(1) from (
+select t1.img_id,t2.type_1 as type_score from bot_img_answer_04  t1 LEFT JOIN bot_img_test_04_p2 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_1 ) t3 where t3.type_score is not null --8816(hit) --8816
+
+select count(1) from (
+select t1.img_id,t2.type_2 as type_score from bot_img_answer_04  t1 LEFT JOIN bot_img_test_04_p2 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_2 ) t3 where t3.type_score is not null --900(hit) 900*0.4 + 8816 = 9176 / 10475 = 0.87599
+
+
+
+#0921
+create table bot_img_test_05_p1 as 
+select * from bot_img_test_04_p1 where 1=2
+select COUNT(DISTINCT img_id) from bot_img_test_05_p1 where score_1 < 0.9 --769
+select COUNT(DISTINCT img_id) from bot_img_test_05_p1 where score_1 >= 0.9
+select * from bot_img_test_05_p1
+alter table bot_img_test_05_p1 add index idx01 (img_id) ;
+delete from bot_img_test_05_p1 where img_id = ''
+delete from bot_img_test_05_p1 where img_id in (select img_id from bot_img_test_05_p1_errors)
+select COUNT(DISTINCT img_id) from bot_img_test_05_p1 --9846-160 = 9686
+
+create table bot_img_test_05_p1_errors as 
+select * from bot_img_test_05_p1 where 1=2
+
+#
+create table bot_img_test_05_p1_160 as 
+select * from bot_img_test_05_p1 where 1=2
+
+select * from 
+(select * from bot_img_test_05_p1_160 UNION select * from bot_img_test_05_p1) t ORDER BY t.img_id
+
+
+
+
+select * from 
+(select * from bot_img_filenames_t3 UNION select * from bot_img_filenames_t4 UNION select * from bot_img_filenames_t1_t2) t ORDER BY t.img_id limit 0,30000
+
+select * from 
+(select * from bot_img_filenames_t3 UNION select * from bot_img_filenames_t4 UNION select * from bot_img_filenames_t1_t2) t ORDER BY t.img_id limit 30000,39000
+
+
+create table bot_img_filenames_t5 as 
+select * from bot_img_filenames_t4 where 1=2
+
+create table bot_img_answer_05 as 
+select * from bot_img_answer_04 WHERE 1=2
+
+select count(1) from (
+select t1.img_id,t2.type_1 as type_score from bot_img_answer_05  t1 LEFT JOIN bot_img_test_05_p1 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_1 ) t3 where t3.type_score is not null --8616 top1 
+
+select count(1) from (
+select t1.img_id,t2.type_2 as type_score from bot_img_answer_05  t1 LEFT JOIN bot_img_test_05_p1 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_2 ) t3 where t3.type_score is not null  --491*0.4 = 196.4 + 8616 = 8812.4
+
+
+select count(1) from bot_img_answer_05 --9835
+
+
+select count(1) from bot_img_test_05_p1 --9686
+
+create table bot_img_0923_trainset as select * from bot_img_0920_trainset where 1=2
+create table bot_img_0923_valset as select * from bot_img_0920_trainset where 1=2
+
+select count(DISTINCT img_id) from bot_img_0923_trainset --96000
+
+select t.type,count(t.type) from bot_img_0923_trainset t GROUP BY t.type;
+
+--SELECT * FROM bot_img_filenames_until_t4 t where t.type = 0 ORDER BY RAND() LIMIT 0,100;
+
+select DISTINCT type,img_id from bot_img_0923_trainset ORDER BY RAND();
+select DISTINCT type,img_id from bot_img_0923_valset ORDER BY RAND();
+
+
+--print line number
+SELECT @rn:=@rn+1 AS rank, type, img_id
+FROM (
+  SELECT DISTINCT type,img_id 
+  FROM bot_img_0923_valset
+  ORDER BY RAND()
+) t1, (SELECT @rn:=0) t2;
+
+
+create table bot_img_mxnet_0923_train as select * from bot_img_0923_trainset where 1=2
+SELECT COUNT(DISTINCT img_id) from bot_img_0923_valset --7199
+
+
