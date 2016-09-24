@@ -33,6 +33,12 @@ mean_img = mx.nd.load('mean.bin').values()[0].asnumpy()
 img_list = glob.glob(args.path+'/*')
 for test_img in img_list:
 	img = io.imread(test_img)
+	img_ori = io.imread(test_img)
+	#handel the spec img with 4 color channels
+	if img_ori[0,0].size == 4:
+	    img = img_ori[:,:,:-1]
+	else:
+	    img = img_ori
 	short_edge = min(img.shape[:2])
 	yy = int((img.shape[0] - short_edge)/2)
 	xx = int((img.shape[1] - short_edge)/2)
