@@ -734,3 +734,6 @@ Traceback (most recent call last):
   File "/home/xiatao/mxnet/example/image-classification/0923_predict.py", line 44, in <module>
     normed_img = sample - mean_img
 ValueError: operands could not be broadcast together with shapes (4,299,299) (3,299,299) 
+
+#0924
+time python ~/mxnet/example/image-classification/0923_predict.py --prefix ./save0923/ --epoch 17 --path ../img_t6_val/
