@@ -469,3 +469,12 @@ create table bot_img_mxnet_0923_train as select * from bot_img_0923_trainset whe
 SELECT COUNT(DISTINCT img_id) from bot_img_0923_valset --7199
 
 select count(1) from bot_img_test_05_p1 t where t.score_1 < 0.8 --1819(<0.9) --1334
+
+
+select count(1) from (
+select t1.img_id,t2.type_1 as type_score from bot_img_answer_06  t1 LEFT JOIN bot_img_test_06_p1 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_1 ) t3 where t3.type_score is not null --9483(res101) --9448(incep v3)
+
+select count(1) from (
+select t1.img_id,t2.type_2 as type_score from bot_img_answer_06  t1 LEFT JOIN bot_img_test_06_p1 t2 on t1.img_id = t2.img_id 
+and t1.type = t2.type_2 ) t3 where t3.type_score is not null --556(res101) --539(incep v3)
