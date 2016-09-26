@@ -38,7 +38,7 @@ def scoring(answer,test):   ###对提交的文件进行计分
     return  score#"%.3f%%"  %(score/len(answer)*100)
 
 answer= readcsv2dict('E:\\caffe\\0926\\BOT_Image_Testset 6.txt')    ###存放答案的文件
-test= readcsv2dict('E:\\caffe\\0926\\0925.t6.res101.txt')      ###参赛者提交的答案
+test= readcsv2dict('E:\\caffe\\0926\\0926.t6.bn21k.txt')      ###参赛者提交的答案
 
 print 'the player No1 score is '+ str(scoring(answer,test))
 
