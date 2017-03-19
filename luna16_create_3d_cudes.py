@@ -4,9 +4,9 @@ import csv
 import os
 from PIL import Image
 import matplotlib.pyplot as plt
+from random import shuffle
 # from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
-
-npy_save_path = 'E:/work_temp/luna16_output/'
+import traceback
 
 
 def load_itk_image(filename):
@@ -49,56 +49,6 @@ def plot_cube(cube, i):
     plt.show()
 
 
-# def cube_augmentation(cube,i):
-#     datagen = ImageDataGenerator(
-#         rotation_range=0.2,
-#         width_shift_range=0.2,
-#         height_shift_range=0.2,
-#         shear_range=0.2,
-#         zoom_range=0.2,
-#         horizontal_flip=True,
-#         fill_mode='nearest')
-#
-#     cube = cube[i,:,:].reshape(1,20,20,1)
-#     i = 0
-#     for batch in datagen.flow(cube,
-# 						  batch_size=1,
-#                           save_to_dir='E:/work_temp/luna16_output/',
-#                           save_prefix='lung16',
-#                           save_format='jpg'):
-#         i += 1
-#         if i > 10:
-#             break  # otherwise the generator would loop indefinitely
-# for i in np.arange(0,cube.shape[0]):
-#     plot_cube(cube,i)
-#
-# print 'begin transform'
-
-# cube_rotation = angle_transpose(cube,270)
-#
-# for i in np.arange(0,cube_rotation.shape[0]):
-#     plot_cube(cube_rotation,i)
-# c1 = np.load('lung16_-279.2924241_75.79401283_58.51266333_20_cube.npy')
-# for i in np.arange(0,c1.shape[0]):
-#      plot_cube(c1,i)
-# print '*******'
-# c2 = np.load('lung16_-279.2924241_75.79401283_58.51266333_20_re_cube.npy')
-# for i in np.arange(0,c2.shape[0]):
-#      plot_cube(c2,i)
-
-# for i in np.arange(0,re_cube.shape[0]):
-#     plot_cube(re_cube,i)
-
-
-img_folder = 'D:/luna2016/data/'
-anno_path = 'D:/luna2016/annotations.csv'
-
-# load annotations
-annos = readCSV(anno_path)
-
-
-
-
 def cut_cube(npy_ct,voxelCoord, z, width, y_bias, x_bias):
     # datatype(z,y,x) = float32,to input to tensorflow
     # y_bias, x bias for data augmentation
@@ -139,7 +89,7 @@ def reverse_cube(cube):
 
 # flag = type of cube augmentations
 def augmentation_cube(npy_ct,prefix, voxelCoord, z, width, y_bias, x_bias, flag):
-    
+
     cube = cut_cube(npy_ct,voxelCoord, z, width, y_bias, x_bias)
     re_cube = reverse_cube(cube)
     np.save(npy_save_path + prefix + '20_' + 'cube_' + flag, cube)
@@ -161,8 +111,8 @@ def augmentation_cube(npy_ct,prefix, voxelCoord, z, width, y_bias, x_bias, flag)
     np.save(npy_save_path + prefix + '20_' + 're_cube_270d' + flag, re_cube_270d)
 
 
-def batch_cat_cube(z, width, bias):
-    for anno in annos[181:182]:
+def batch_cut_cube(z, width, bias):
+    for anno in annos[1:]:
         numpyImage, numpyOrigin, numpySpacing = load_itk_image(img_folder + anno[0] + '.mhd')
         worldCoord = np.asarray([float(anno[3]), float(anno[2]), float(anno[1])])
         # order = z,y,x
@@ -188,13 +138,107 @@ def batch_cat_cube(z, width, bias):
         augmentation_cube(numpyImage,prefix, voxelCoord, z, width, -bias, -bias, '08')
 
 
+def batch_cut_negative_cube(z, width):
+    # shuffle cans
+    index_shuf = range(len(cans))
+    shuffle(index_shuf)
+    j = 0
+    for i in index_shuf:
+        numpyImage, numpyOrigin, numpySpacing = load_itk_image(img_folder + cans[i][0] + '.mhd')
+        worldCoord = np.asarray([float(cans[i][3]), float(cans[i][2]), float(cans[i][1])])
+        # order = z,y,x
+        voxelCoord = worldToVoxelCoord(worldCoord, numpyOrigin, numpySpacing)
+        prefix = 'lung16_' + str(cans[i][3]) + '_' + str(cans[i][2]) + '_' + str(cans[i][1]) + '_'
+        # test if the voxelCoord inside the 512x512xslice range
+        if abs(voxelCoord[0]-numpyImage.shape[0]) > 6 and abs(voxelCoord[1]-numpyImage.shape[1]) > 20 and abs(voxelCoord[2]-numpyImage.shape[2]) > 20:
+            # cut negative cube
+            cube = cut_cube(numpyImage,voxelCoord, z, width, 0, 0)
+            print str(i)+'|'+ cans[i][0]
+            np.save(negative_npy_save_path + prefix + '20_' + 'cube_' + 'negative', cube)
+            j += 1
+            if j >= 85392:
+                break
+
+
+def fast_cut_negative_cube(z, width):
+    prev = 'head'
+    numpyImage = None
+    numpyOrigin = None
+    numpySpacing = None
+    for can in cans:
+        if can[0] == prev:
+            worldCoord = np.asarray([float(can[3]), float(can[2]), float(can[1])])
+            # order = z,y,x
+            voxelCoord = worldToVoxelCoord(worldCoord, numpyOrigin, numpySpacing)
+            prefix = 'lung16_' + str(can[3]) + '_' + str(can[2]) + '_' + str(can[1]) + '_'
+            # test if the voxelCoord inside the 512x512xslice range
+            if abs(voxelCoord[0]-numpyImage.shape[0]) > 6 and abs(voxelCoord[1]-numpyImage.shape[1]) > 20 and abs(voxelCoord[2]-numpyImage.shape[2]) > 20:
+                try:
+                # cut negative cube
+                    cube = cut_cube(numpyImage,voxelCoord, z, width, 0, 0)
+                except Exception, e:
+                    print(" process images %s error..." % prefix)
+                    print(Exception, ":", e)
+                    traceback.print_exc()
+                np.save(negative_npy_save_path + prefix + '20_' + 'cube_' + 'negative', cube)
+
+
+            prev = can[0]
+        else:
+            numpyImage, numpyOrigin, numpySpacing = load_itk_image(img_folder + can[0] + '.mhd')
+            worldCoord = np.asarray([float(can[3]), float(can[2]), float(can[1])])
+            # order = z,y,x
+            voxelCoord = worldToVoxelCoord(worldCoord, numpyOrigin, numpySpacing)
+            prefix = 'lung16_' + str(can[3]) + '_' + str(can[2]) + '_' + str(can[1]) + '_'
+            # test if the voxelCoord inside the 512x512xslice range
+            if abs(voxelCoord[0]-numpyImage.shape[0]) > 6 and abs(voxelCoord[1]-numpyImage.shape[1]) > 20 and abs(voxelCoord[2]-numpyImage.shape[2]) > 20:
+                try:
+                    # cut negative cube
+                    cube = cut_cube(numpyImage,voxelCoord, z, width, 0, 0)
+                except Exception, e:
+                    print(" process images %s error..." % prefix)
+                    print(Exception, ":", e)
+                    traceback.print_exc()
+                np.save(negative_npy_save_path + prefix + '20_' + 'cube_' + 'negative', cube)
+
+            prev = can[0]
+
+
+
 def check_cube(cube):
     for i in np.arange(0,cube.shape[0]):
         plot_cube(cube,i)
 
-if __name__ == '__main__':
-    # batch_cat_cube(6, 20, 3)
-    cube = np.load(npy_save_path+'lung16_-279.2924241_75.79401283_58.51266333_20_re_cube_270d08'+'.npy')
-    check_cube(cube)
-    print cube.shape
 
+if __name__ == '__main__':
+    npy_save_path = 'E:/work_temp/luna16_output/positive/20mm/'
+    negative_npy_save_path = 'E:/work_temp/luna16_output/negative/20mm/'
+    img_folder = 'D:/luna2016/data/'
+    anno_path = 'D:/luna2016/annotations.csv'
+    candidates_path = 'cans_sort.txt'
+
+    # load annotations
+    annos = readCSV(anno_path)
+    # load candidates
+    cans = readCSV(candidates_path)
+
+    #batch_cut_negative_cube(6,20)
+    fast_cut_negative_cube(6,20)
+
+
+    # batch_cut_cube(6, 20, 3)
+    # cube = np.load(negative_npy_save_path+'lung16_-183.27_-127.57_-9.17_20_cube_negative'+'.npy')
+    # check_cube(cube)
+    # print cube.shape
+    # index_shuf = range(len(cans))
+    # shuffle(index_shuf)
+    # j = 0
+    # fo = open("cans_output.txt", "w")
+    #
+    # for i in index_shuf:
+    #     # print cans[i]
+    #     j += 1
+    #     fo.write((cans[i][0])+','+(cans[i][1])+','+(cans[i][2])+','+(cans[i][3])+','+(cans[i][4])+'\n')
+    #     if j >= 90000:
+    #         break
+    # fo.close()
