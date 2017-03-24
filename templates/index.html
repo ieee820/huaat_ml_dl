@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <!-- iOS meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='papaya.css') }}?build=1422"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='iconfont.css') }}"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='papaya.js') }}?build=1422"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='vue.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='zepto.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='ajax-helper.js') }}"></script>
+    <title>Papaya Viewer</title>
+
+
+</head>
+
+<body>
+
+<div id="app" class="papaya" @dblclick="coord">
+
+
+			<modal-dialog v-bind:show.sync="show">
+
+				<header class="dialog-header" slot="header">
+					<h1 class="dialog-title">Commit nodule coordinate</h1>
+				</header>
+
+				<div class="dialog-body" slot="body">
+					<div class="form-group">
+						<label>Patient Id</label>
+						<input type="text" v-model="item.pid" />
+					</div>
+                    <div class="form-group">
+						<label>Predict result</label>
+						<input type="text" v-model="result" />
+					</div>
+
+					<div class="form-group">
+						<label></label>
+						<button @click="submit_coord">Predict</button>
+					</div>
+				</div>
+
+			</modal-dialog>
+</div>
+
+<template id="dialog-template">
+			<div class="dialogs">
+				<div class="dialog" v-bind:class="{ 'dialog-active': show }">
+					<div class="dialog-content">
+						<div class="close rotate">
+							<span class="iconfont icon-close" @click="close"></span>
+						</div>
+						<slot name="header"></slot>
+						<slot name="body"></slot>
+						<slot name="footer"></slot>
+					</div>
+				</div>
+				<div class="dialog-overlay"></div>
+			</div>
+</template>
+
+</body>
+
+<script>
+
+    Vue.component('modal-dialog', {
+        template: '#dialog-template',
+        props: ['show'],
+        methods: {
+            close: function () {
+                this.show = false
+            }
+        }
+    })
+</script>
+<script type="text/javascript">
+
+    var ajaxHelper = new AjaxHelper()
+
+    var demo = new Vue({
+        el: '#app',
+        data: {
+            show: false,
+            title: '',
+            apiUrl: '{{ url_for('get_json') }}',
+            item: {
+                pid:'N/A',
+                z:0,
+                y:0,
+                x:0
+
+            },
+            result:'N/A'
+        },
+        ready: function () {
+
+        },
+        methods: {
+            closeDialog: function () {
+                this.show = false
+            },
+            coord: function () {
+                var coord_custom = papayaContainers[0].viewer.currentCoord
+                console.log(coord_custom.x + ',' + coord_custom.y + ',' + coord_custom.z)
+                this.item.z = coord_custom.z
+                this.item.y = coord_custom.y
+                this.item.x = coord_custom.x
+                if(coord_custom.z!=0 && coord_custom.y!=0 && coord_custom.x!=0){
+                    var notes = papayaContainers[0].viewer.volume.header.imageDescription.notes.split(" ")
+                    var pid = notes[0]
+                    this.item.pid = pid 
+                }
+                
+                this.result = 'Ready'
+                this.show = true
+            },
+
+            submit_coord: function () {
+                var vm = this,
+                        success = function (data) {
+//                            vm.$set('item.result'.data)
+                            vm.result = data.result
+                        }
+                ajaxHelper.post(vm.apiUrl, vm.item, success)
+            }
+
+        }
+    })
+
+</script>
+</html>
