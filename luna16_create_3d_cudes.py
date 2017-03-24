@@ -45,20 +45,26 @@ def normalizePlanes(npzarray):
 
 
 def plot_cube(cube, i):
-    plt.imshow(cube[i, :, :], cmap='gray')
+    #cube_180d = np.fliplr(cube[i])
+    plt.imshow(cube[i], cmap='gray')
     plt.show()
 
 
-def cut_cube(npy_ct,voxelCoord, z, width, y_bias, x_bias):
+def cut_cube(npy_img,voxelCoord, z, width, y_bias, x_bias):
+    # mirror the images , the same with the web browser
+    npy_ct = npy_img[int(voxelCoord[0] - z / 2):int(voxelCoord[0] + z / 2),:,:]
     # datatype(z,y,x) = float32,to input to tensorflow
     # y_bias, x bias for data augmentation
     cube = np.ndarray([z, width, width], dtype=np.float32)
-    cube[:, :, :] = npy_ct[int(voxelCoord[0] - z / 2):int(voxelCoord[0] + z / 2),
+    cube[:, :, :] = npy_ct[:,
                     int(voxelCoord[1] - width / 2 + y_bias):int(voxelCoord[1] + width / 2 + y_bias),
                     int(voxelCoord[2] - width / 2 + x_bias):int(voxelCoord[2] + width / 2 + x_bias)]
     cube = normalizePlanes(cube)
+    flip_cube = np.ndarray([z, width, width], dtype=np.float32)
+    for i in range(cube.shape[0]):
+        flip_cube[i] = np.fliplr(cube[i])
 
-    return cube
+    return flip_cube
 
 
 def angle_transpose(cube, degree):
@@ -204,11 +210,13 @@ def fast_cut_negative_cube(z, width):
             prev = can[0]
 
 
-
-def check_cube(cube):
+# if save = 1 ,save the imgs ; else plot the imgs
+def check_cube(cube,save,path):
     for i in np.arange(0,cube.shape[0]):
-        plot_cube(cube,i)
-
+        if save == 1:
+            Image.fromarray(cube[i] * 255).convert('L').save(os.path.join(path,str(i)+'.tiff'))
+        else:
+            plot_cube(cube,i)
 
 if __name__ == '__main__':
     npy_save_path = 'E:/work_temp/luna16_output/positive/20mm/'
@@ -216,15 +224,15 @@ if __name__ == '__main__':
     img_folder = 'D:/luna2016/data/'
     anno_path = 'D:/luna2016/annotations.csv'
     candidates_path = 'cans_sort.txt'
-
+    #
     # load annotations
     annos = readCSV(anno_path)
     # load candidates
     cans = readCSV(candidates_path)
-
-    #batch_cut_negative_cube(6,20)
-    fast_cut_negative_cube(6,20)
-
+    #
+    # #batch_cut_negative_cube(6,20)
+    # fast_cut_negative_cube(6,20)
+    print('main_func')
 
     # batch_cut_cube(6, 20, 3)
     # cube = np.load(negative_npy_save_path+'lung16_-183.27_-127.57_-9.17_20_cube_negative'+'.npy')

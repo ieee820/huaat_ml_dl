@@ -1,0 +1,5 @@
+positive_dir = 'predict/'
+negative_dir = 'E:/work_temp/luna16_output/negative/20mm/'
+positive_txt = 'positive_list_10.txt'
+negative_txt = 'negative_list.txt'
+luna16_path = '/data/lung2017/stage1/'
